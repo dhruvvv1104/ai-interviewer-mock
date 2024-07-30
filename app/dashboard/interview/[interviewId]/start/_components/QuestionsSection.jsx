@@ -19,7 +19,7 @@ function QuestionsSection({ mockInterviewQuestion, activeQuestionIndex}) {
         {hasQuestions ? (
           mockInterviewQuestion.map((question, index) => (
             <h2 className ={`p-2 bg-secondary rounded-md text-xs md:text-lg text-center 
-                cursor-pointer ${activeQuestionIndex==index &&'bg-blue-300 text-white'}`} key={index}>Question #{index + 1}</h2>
+                cursor-pointer ${activeQuestionIndex==index &&'bg-yellow-300 text-white'}`} key={index}>Question #{index + 1}</h2>
           ))
         ) : (
           <p>No questions available</p>
