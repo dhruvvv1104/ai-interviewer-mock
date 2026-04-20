@@ -67,15 +67,19 @@ function RecordAnswerSection({mockInterviewQuestion,activeQuestionIndex, intervi
         console.log(userAnswer)
         setLoading(true)
         const feedbackPrompt = "Question:"+ mockInterviewQuestion[activeQuestionIndex]?.question +
-            ", User Answer:"+ userAnswer+ ",Depends on question and user answer for given interview question"+
-            " please give us rating for answer and feedback as area of improvement if any, also start rating from 5, it's okay if the answers are not very detailed" +
-            "in just 1-2 lines to improve it in JSON format with rating field and feedback field";
+            ", User Answer:"+ userAnswer+ ",Depends on question and user answer for given interview question "+
+            "please give us a rating for the answer and feedback as area of improvement if any, also provide rating out of 5, it's okay if the answers are not very detailed" +
+            " in just 1-2 lines to improve it. Ensure the response is a standard JSON object containing exactly two fields: 'rating' and 'feedback'. Do NOT return an array.";
 
             const result = await chatSession.sendMessage(feedbackPrompt);
 
             const mockJsonResp = (result.response.text()).replace('```json','').replace('```','');
             console.log(mockJsonResp);
-            const JsonFeedbackResp = JSON.parse(mockJsonResp);
+            let JsonFeedbackResp = JSON.parse(mockJsonResp);
+
+            if (Array.isArray(JsonFeedbackResp)) {
+                JsonFeedbackResp = JsonFeedbackResp[0];
+            }
 
             const resp = await db.insert(UserAnswer)
             .values({

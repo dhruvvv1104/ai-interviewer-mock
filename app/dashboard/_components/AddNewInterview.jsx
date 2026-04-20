@@ -25,7 +25,6 @@ function AddNewInterview() {
     const [openDailog,setOpenDailog] = useState(false)
     const [ExecutiveDepartment,setExecutiveDepartment] = useState();
     const [PastExperiences,setPastExperiences] = useState();
-    const [WhyGDSC,setWhyGDSC] = useState();
     const [loading,setLoading] = useState(false);
     const [jsonResponse, setJsonResponse] = useState([]);
     const router = useRouter();
@@ -35,7 +34,7 @@ function AddNewInterview() {
 
         setLoading(true)
         e.preventDefault()
-        console.log(ExecutiveDepartment, PastExperiences, WhyGDSC);
+        console.log(ExecutiveDepartment, PastExperiences);
         
 
         const InputPrompt= "Executive Department: "+ExecutiveDepartment+", Past Experience: "+PastExperiences+", Depends on this information give me 2 interview question with Answers in json format, give question and answer as field in JSON, and return just a JSON array of objects without any wrapper or outer object."
@@ -52,7 +51,6 @@ function AddNewInterview() {
             jsonMockResp:MockJsonResp,
             ExecDepartment:ExecutiveDepartment,
             PastExperiences:PastExperiences,
-            WhyGDSC:WhyGDSC,
             createdBy:user?.primaryEmailAddress?.emailAddress,
             createdAt:moment().format('DD-MM-YYYY')
             
@@ -87,7 +85,7 @@ function AddNewInterview() {
             <DialogDescription>
             <form onSubmit={onSubmit}>
             <div>
-                <h2> Add Details about executive department, past experiences, why GDSC </h2>
+                <h2> Add Details about executive department and past experiences </h2>
                 
 
                 <div className='mt-7 my-2'>
@@ -100,10 +98,7 @@ function AddNewInterview() {
                     <Textarea placeholder = "Ex. Any projects/internships/" onChange ={(event)=>setPastExperiences(event.target.value)}/>
                 </div>
 
-                <div className='my-3'>
-                    <label>Why GDSC? (In Short)</label>
-                    <Textarea placeholder = " " max="100" onChange ={(event)=>setWhyGDSC(event.target.value)}/>
-                </div>
+
 
             
             </div>    
