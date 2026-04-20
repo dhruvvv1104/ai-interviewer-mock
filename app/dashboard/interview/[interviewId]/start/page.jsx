@@ -23,8 +23,17 @@ function StartInterview({params}) {
         const result = await db.select().from(MockInterview)
         .where(eq(MockInterview.mockId, params.interviewId))
 
-        const jsonMockResp = JSON.parse(result[0].jsonMockResp)
+        let jsonMockResp = JSON.parse(result[0].jsonMockResp)
         console.log(jsonMockResp);
+
+        // If the response is wrapped in an object (e.g. { interview_questions: [...] }), extract the array
+        if (!Array.isArray(jsonMockResp) && typeof jsonMockResp === 'object') {
+            const keys = Object.keys(jsonMockResp);
+            if (keys.length === 1 && Array.isArray(jsonMockResp[keys[0]])) {
+                jsonMockResp = jsonMockResp[keys[0]];
+            }
+        }
+
         setMockInterviewQuestion(jsonMockResp);
         setInterviewData(result[0]);
 

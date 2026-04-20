@@ -38,7 +38,7 @@ function AddNewInterview() {
         console.log(ExecutiveDepartment, PastExperiences, WhyGDSC);
         
 
-        const InputPrompt= "Executive Department: "+ExecutiveDepartment+", Past Experience: "+PastExperiences+", Depends on this information give me 2 interview question with Answers in json format, give Question and Answerers as field in JSON"
+        const InputPrompt= "Executive Department: "+ExecutiveDepartment+", Past Experience: "+PastExperiences+", Depends on this information give me 2 interview question with Answers in json format, give question and answer as field in JSON, and return just a JSON array of objects without any wrapper or outer object."
         
         const result = await chatSession.sendMessage(InputPrompt);
         const MockJsonResp = (result.response.text()).replace('```json','').replace('```','')
