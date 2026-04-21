@@ -31,9 +31,11 @@ function RecordAnswerSection({mockInterviewQuestion,activeQuestionIndex, intervi
   });
 
     useEffect(()=>{
-        results.map((result)=>(
-            setUserAnswer(prevAns=>prevAns+result?.transcript)
-        ))
+        let finalAns = '';
+        results.forEach((result) => {
+            finalAns += result?.transcript;
+        });
+        setUserAnswer(finalAns);
     },[results])
 
     useEffect(()=>{
@@ -41,22 +43,12 @@ function RecordAnswerSection({mockInterviewQuestion,activeQuestionIndex, intervi
         {
             UpdateUserAnswer();
         }
-
-
-    },[userAnswer])
-
-
+    },[userAnswer, isRecording])
 
     const StartStopRecording =async()=>{
         if(isRecording)
         {
-            
             stopSpeechToText()
-
-
-
-            
-
         }
         else{
             startSpeechToText();
@@ -81,31 +73,32 @@ function RecordAnswerSection({mockInterviewQuestion,activeQuestionIndex, intervi
                 JsonFeedbackResp = JsonFeedbackResp[0];
             }
 
-            const resp = await db.insert(UserAnswer)
-            .values({
-                mockIdRef:interviewData?.mockId,
-                question:mockInterviewQuestion[activeQuestionIndex]?.question,
-                correctAns:mockInterviewQuestion[activeQuestionIndex]?.answer,
-                userAns:userAnswer,
-                feedback:JsonFeedbackResp?.feedback,
-                rating:JsonFeedbackResp?.rating,
-                userEmail:user?.primaryEmailAddress?.emailAddress,
-                createdAt:moment().format('DD-MM-yyyy')
-            })
+            try {
+                const resp = await db.insert(UserAnswer)
+                .values({
+                    mockIdRef:interviewData?.mockId,
+                    question:mockInterviewQuestion[activeQuestionIndex]?.question,
+                    correctAns:mockInterviewQuestion[activeQuestionIndex]?.answer,
+                    userAns:userAnswer,
+                    feedback:JsonFeedbackResp?.feedback,
+                    rating: String(JsonFeedbackResp?.rating),
+                    userEmail:user?.primaryEmailAddress?.emailAddress,
+                    createdAt:moment().format('DD-MM-yyyy')
+                })
                 if(resp)
                 {
                     toast("User Answer Recorded Successfully");
                     setUserAnswer('');
                     setResults([]);
                 }
+            } catch (error) {
+                console.error("Error inserting answer to database:", error);
+                toast("Error recording answer");
+            } finally {
                 setResults([]);
-                
                 setLoading(false);
-            
+            }
         }
-
-
-
 
   return (
     <div className = "flex items-center justify-center flex-col">
